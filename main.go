@@ -5,11 +5,25 @@ import (
 	"golang.org/x/net/websocket"
 	"net/http"
 	"fmt"
+	"io/ioutil"
 )
 
-type T struct {
-	Msg string
-	Count int
+type Voice struct {
+	Data []byte
+}
+
+type Emotion struct{
+	Calm    int    `json:"calm"`
+	Anger   int    `json:"anger"`
+	Joy     int    `json:"joy"`
+	Sorrow  int    `json:"sorrow"`
+	Energy  int    `json:"energy"`
+}
+
+type MirrorBowlResponse struct {
+	Suggestion string `json:"suggestion"`
+	Tention    int    `json:"tention"`
+	Emotion Emotion`json:"emotion"`
 }
 
 func main() {
@@ -26,19 +40,43 @@ func main() {
 func MirrorBowlHandler(ws *websocket.Conn) {
 	var err error
 	for {
-		var message string
-		if err = websocket.Message.Receive(ws, &message); err != nil {
-			fmt.Println("Can't receive")
+		//var v Voice
+		//if err = websocket.JSON.Receive(ws, &v); err != nil {
+		//	fmt.Println(err)
+		//	break
+		//}
+		var v string
+		if err = websocket.Message.Receive(ws, &v); err != nil {
+			fmt.Println(err)
 			break
 		}
-		fmt.Println("Received back from client: " + message)
 
-		data := T{
-			Msg:   message,
-			Count: 1,
+		data, err := ioutil.ReadFile(`./voice.wav`)
+		if err != nil {
+			fmt.Println(err)
+			break
 		}
 
-		if err = websocket.JSON.Send(ws, data); err != nil {
+		empath := SendEmpathAPI(data)
+
+		res := MirrorBowlResponse{
+			Suggestion:"森食ってモリモリ",
+			Tention:49,
+			Emotion: Emotion{
+				empath.Calm ,
+				empath.Anger ,
+				empath.Joy ,
+				empath.Sorrow ,
+				empath.Energy,
+			},
+		}
+
+		//data = T{
+		//	Msg:   message,
+		//	Count: 114514,
+		//}
+
+		if err = websocket.JSON.Send(ws, res); err != nil {
 			fmt.Println("Can't send")
 			break
 		}
