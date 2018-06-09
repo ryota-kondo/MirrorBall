@@ -59,17 +59,7 @@ func MirrorBowlHandler(ws *websocket.Conn) {
 
 		empath := SendEmpathAPI(data)
 
-		res := MirrorBowlResponse{
-			Suggestion:"森食ってモリモリ",
-			Tention:49,
-			Emotion: Emotion{
-				empath.Calm ,
-				empath.Anger ,
-				empath.Joy ,
-				empath.Sorrow ,
-				empath.Energy,
-			},
-		}
+		res := CreateResponse(empath)
 
 		//data = T{
 		//	Msg:   message,

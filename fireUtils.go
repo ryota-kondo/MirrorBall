@@ -20,7 +20,6 @@ func SaveReadFile(data []byte)  {
 }
 
 func ReadWav() *os.File{
-	// ファイルのオープ
 	file, err := os.Open("./tmp")
 	if err != nil {
 		log.Fatal(err)
@@ -28,6 +27,21 @@ func ReadWav() *os.File{
 	return file
 }
 
+// TODO 未実装
 func ConvertM4aToWav()  {
 	
+}
+
+func CreateResponse(empathResponse EmpathResponse) MirrorBowlResponse {
+	return MirrorBowlResponse{
+		Suggestion:"森食ってモリモリ",
+		Tention:49,
+		Emotion: Emotion{
+			empathResponse.Calm ,
+			empathResponse.Anger ,
+			empathResponse.Joy ,
+			empathResponse.Sorrow ,
+			empathResponse.Energy,
+		},
+	}
 }
