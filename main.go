@@ -5,12 +5,16 @@ import (
 	"golang.org/x/net/websocket"
 	"net/http"
 	"fmt"
-	"bytes"
 )
 
-var codec = websocket.Codec{}
+type T struct {
+	Msg string
+	Count int
+}
 
 func main() {
+	fmt.Println("Run Server")
+
 	http.Handle("/mirror_bowl", websocket.Handler(MirrorBowlHandler))
 	http.Handle("/echo", websocket.Handler(EchoHandler))
 	err := http.ListenAndServe(":3000", nil)
@@ -20,13 +24,27 @@ func main() {
 }
 
 func MirrorBowlHandler(ws *websocket.Conn) {
-	//str,_ := ioutil.ReadAll(ws)
-	//buffer3 := bytes.NewBufferString(string(str))
-	buffer3 := bytes.NewBufferString("a")
-	ws.Write(buffer3.Bytes())
+	var err error
+	for {
+		var message string
+		if err = websocket.Message.Receive(ws, &message); err != nil {
+			fmt.Println("Can't receive")
+			break
+		}
+		fmt.Println("Received back from client: " + message)
+
+		data := T{
+			Msg:   message,
+			Count: 1,
+		}
+
+		if err = websocket.JSON.Send(ws, data); err != nil {
+			fmt.Println("Can't send")
+			break
+		}
+	}
 }
 
 func EchoHandler(ws *websocket.Conn) {
-	fmt.Println("test")
 	io.Copy(ws, ws)
 }
