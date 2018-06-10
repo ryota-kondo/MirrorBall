@@ -64,7 +64,7 @@ func MirrorBowlHandler(ws *websocket.Conn) {
 		// API 叩き
 		empath := SendEmpathAPI(wavData)
 
-		res := CreateResponse(empath)
+		res := CreateResponse(empath,0)
 
 		if err = websocket.JSON.Send(ws, res); err != nil {
 			fmt.Println("[E0002]")

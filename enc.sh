@@ -1,0 +1,1 @@
+ffmpeg -i voice.m4a -ac 1 -ar 11025 voice.wav -y

@@ -31,23 +31,52 @@ func ReadWav() []byte{
 
 // TODO 未実装
 func ConvertM4aToWav() (error) {
-	err := exec.Command("ffmpeg -i voice.m4a voice.wav").Run()
+	fmt.Println("cnv start")
+
+	out, err := exec.Command("ls", "-la").Output()
+	fmt.Println(string(out))
+
+	err = exec.Command("sh","./enc.sh").Run()
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
+	fmt.Println("conv Success")
 	return nil
 }
 
-func CreateResponse(empathResponse EmpathResponse) MirrorBowlResponse {
-	return MirrorBowlResponse{
-		Suggestion:"森食ってモリモリ",
-		Tention:49,
-		Emotion: Emotion{
-			empathResponse.Calm ,
-			empathResponse.Anger ,
-			empathResponse.Joy ,
-			empathResponse.Sorrow ,
-			empathResponse.Energy,
-		},
+func CreateResponse(empathResponse EmpathResponse,pt int) MirrorBowlResponse {
+	var res MirrorBowlResponse
+
+	if pt == 0 {
+		res = MirrorBowlResponse{
+			Suggestion:"森食ってモリモリ",
+			Tention:49,
+			Emotion: Emotion{
+				empathResponse.Calm ,
+				empathResponse.Anger ,
+				empathResponse.Joy ,
+				empathResponse.Sorrow ,
+				empathResponse.Energy,
+			},
+		}
+	}else if pt == 1{
+		res = MirrorBowlResponse{
+			Suggestion:"森食ってモリモリ",
+			Tention:49,
+			Emotion: Emotion{
+				empathResponse.Calm ,
+				empathResponse.Anger ,
+				empathResponse.Joy ,
+				empathResponse.Sorrow ,
+				empathResponse.Energy,
+			},
+		}
+	}else if pt == 2{
+
 	}
+
+
+
+	return res
 }
