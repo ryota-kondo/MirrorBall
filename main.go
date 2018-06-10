@@ -11,6 +11,7 @@ import (
 // 前回沈黙フラグ
 var latestResult = false
 
+//　クライアントから送信されるエンコード済み音声データ
 type Voice struct {
 	Data string`json:"data"`
 }
@@ -50,22 +51,25 @@ func MirrorBowlHandler(ws *websocket.Conn) {
 			break
 		}
 
+		// 音声をBase64でコード
 		data, _ := base64.StdEncoding.DecodeString(v.Data) //[]byte
 
-		// m4aファイルを保存
+		// m4aファイルをローカルへ保存
 		SaveReadFile(data)
 
-		// m4a -> WAV
+		// m4a -> WAVのシェルを実行(FFMPEG)
 		ConvertM4aToWav()
 
-		// wavファイル読み込み
+		// 変換したwavファイル読み込み
 		wavData := ReadWav()
 
-		// API 叩き
+		// EmpathAPIにWAVを送信し感情を受け取る
 		empath := SendEmpathAPI(wavData)
 
-		res := CreateResponse(empath,0)
+		// API結果よりResponseJパラメータを生成
+		res := CreateResponse(empath)
 
+		// クライアントに送信
 		if err = websocket.JSON.Send(ws, res); err != nil {
 			fmt.Println("[E0002]")
 			fmt.Println(err)
@@ -73,6 +77,7 @@ func MirrorBowlHandler(ws *websocket.Conn) {
 	}
 }
 
+// おうむ返し
 func EchoHandler(ws *websocket.Conn) {
 	io.Copy(ws, ws)
 }

@@ -26,6 +26,7 @@ type EmpathResponse struct {
 	Energy  int    `json:"energy"`
 }
 
+// EmpathAPIより感情を受信
 func SendEmpathAPI(voice []byte) EmpathResponse{
 	var err error
 

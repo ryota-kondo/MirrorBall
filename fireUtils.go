@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 )
 
+// m4a音声をローカルに保存
 func SaveReadFile(data []byte)  {
 	var file *os.File
 	file, err := os.Create("voice.m4a")
@@ -20,6 +21,7 @@ func SaveReadFile(data []byte)  {
 	fmt.Println("File Save Exec")
 }
 
+// WAVをローカルから読み取り
 func ReadWav() []byte{
 	data, err := ioutil.ReadFile(`./voice.wav`)
 	if err != nil {
@@ -29,7 +31,7 @@ func ReadWav() []byte{
 	return data
 }
 
-// TODO 未実装
+// m4aをwavに変換するシェルスクリプトを実行
 func ConvertM4aToWav() (error) {
 	fmt.Println("cnv start")
 
@@ -45,10 +47,9 @@ func ConvertM4aToWav() (error) {
 	return nil
 }
 
-func CreateResponse(empathResponse EmpathResponse,pt int) MirrorBowlResponse {
+func CreateResponse(empathResponse EmpathResponse) MirrorBowlResponse {
 	var res MirrorBowlResponse
 
-	if pt == 0 {
 		res = MirrorBowlResponse{
 			Suggestion:"森食ってモリモリ",
 			Tention:49,
@@ -60,22 +61,6 @@ func CreateResponse(empathResponse EmpathResponse,pt int) MirrorBowlResponse {
 				empathResponse.Energy,
 			},
 		}
-	}else if pt == 1{
-		res = MirrorBowlResponse{
-			Suggestion:"森食ってモリモリ",
-			Tention:49,
-			Emotion: Emotion{
-				empathResponse.Calm ,
-				empathResponse.Anger ,
-				empathResponse.Joy ,
-				empathResponse.Sorrow ,
-				empathResponse.Energy,
-			},
-		}
-	}else if pt == 2{
-
-	}
-
 
 
 	return res
