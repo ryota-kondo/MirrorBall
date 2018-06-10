@@ -8,6 +8,9 @@ import (
 	"encoding/base64"
 )
 
+// 前回沈黙フラグ
+var latestResult = false
+
 type Voice struct {
 	Data string`json:"data"`
 }
@@ -47,32 +50,21 @@ func MirrorBowlHandler(ws *websocket.Conn) {
 			break
 		}
 
-		//var v string
-		//if err = websocket.Message.Receive(ws, &v); err != nil {
-		//	fmt.Println(err)
-		//	break
-		//}
-
 		data, _ := base64.StdEncoding.DecodeString(v.Data) //[]byte
 
-		//data, err := ioutil.ReadFile(`./voice.wav`)
-		//if err != nil {
-		//	fmt.Println(err)
-		//	break
-		//}
-
-		// data := v.Data
-
+		// m4aファイルを保存
 		SaveReadFile(data)
 
-		empath := SendEmpathAPI(data)
+		// m4a -> WAV
+		ConvertM4aToWav()
+
+		// wavファイル読み込み
+		wavData := ReadWav()
+
+		// API 叩き
+		empath := SendEmpathAPI(wavData)
 
 		res := CreateResponse(empath)
-
-		//data = T{
-		//	Msg:   message,
-		//	Count: 114514,
-		//}
 
 		if err = websocket.JSON.Send(ws, res); err != nil {
 			fmt.Println("[E0002]")

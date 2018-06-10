@@ -12,3 +12,6 @@
 *.out
 .idea/
 hide.go
+ffmpegcpl.sh
+install.sh
+tmp.m4a
