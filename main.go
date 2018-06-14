@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"io"
 	"golang.org/x/net/websocket"
 	"net/http"
@@ -35,7 +36,11 @@ func main() {
 
 	http.Handle("/mirror_bowl", websocket.Handler(MirrorBowlHandler))
 	http.Handle("/echo", websocket.Handler(EchoHandler))
-	err := http.ListenAndServe(":3000", nil)
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "3000"
+	}
+	err := http.ListenAndServe(":" + port, nil)
 	if err != nil {
 		panic("ListenAndServe: " + err.Error())
 	}
