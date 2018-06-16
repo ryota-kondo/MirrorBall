@@ -1,8 +1,5 @@
 FROM ubuntu:16.04
 
-# docker build ./ -t spajam
-# docker run --name hogehoge -d -p 3000:3000 spajam
-
 # apt-get
 RUN apt-get update -y && apt-get install -y \
 golang \
@@ -21,7 +18,6 @@ COPY ./api.go /spajam2018_server/
 COPY ./enc.sh /spajam2018_server/
 COPY ./fireUtils.go /spajam2018_server/
 COPY ./main.go /spajam2018_server/
-COPY ./temp.go /spajam2018_server/
 
 # build
 WORKDIR /spajam2018_server
