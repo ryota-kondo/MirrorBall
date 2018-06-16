@@ -25,7 +25,7 @@ type Emotion struct {
 	Energy int `json:"energy"`
 }
 
-type MirrorBowlResponse struct {
+type MirrorBallResponse struct {
 	Suggestion string  `json:"suggestion"`
 	Tention    int     `json:"tention"`
 	Emotion    Emotion `json:"emotion"`
@@ -34,7 +34,7 @@ type MirrorBowlResponse struct {
 func main() {
 	fmt.Println("Run Server")
 
-	http.Handle("/mirror_bowl", websocket.Handler(MirrorBowlHandler))
+	http.Handle("/mirror_ball", websocket.Handler(MirrorBallHandler))
 	http.Handle("/echo", websocket.Handler(EchoHandler))
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
@@ -46,7 +46,7 @@ func main() {
 	}
 }
 
-func MirrorBowlHandler(ws *websocket.Conn) {
+func MirrorBallHandler(ws *websocket.Conn) {
 	var err error
 	for {
 		var v Voice

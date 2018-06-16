@@ -48,7 +48,7 @@ func ConvertM4aToWav() (error) {
 }
 
 
-func CreateResponse(empathResponse EmpathResponse) MirrorBowlResponse {
+func CreateResponse(empathResponse EmpathResponse) MirrorBallResponse {
 
 	// 統計処理
 	Tension[0] = Tension[1]
@@ -62,7 +62,7 @@ func CreateResponse(empathResponse EmpathResponse) MirrorBowlResponse {
 
 		// APIエラーがある場合
 		if empathResponse.Error != 0 {
-			return MirrorBowlResponse{
+			return MirrorBallResponse{
 				Suggestion: "9",
 				Tention:0,
 				Emotion: Emotion{
@@ -114,7 +114,7 @@ func CreateResponse(empathResponse EmpathResponse) MirrorBowlResponse {
 				resSuggestion = checkSuggestion[0]
 			}
 
-			return MirrorBowlResponse{
+			return MirrorBallResponse{
 				Suggestion: resSuggestion,
 				Tention: resTension,
 				Emotion: Emotion{
@@ -128,7 +128,7 @@ func CreateResponse(empathResponse EmpathResponse) MirrorBowlResponse {
 		}
 	} else {
 		// 評価回数じゃない場合
-		return MirrorBowlResponse{
+		return MirrorBallResponse{
 			Suggestion: "",
 			Tention: empathResponse.Energy,
 			Emotion: Emotion{
