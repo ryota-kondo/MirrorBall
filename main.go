@@ -11,6 +11,7 @@ import (
 
 // 前回沈黙フラグ
 var latestResult = false
+var apiKey string
 
 //　クライアントから送信されるエンコード済み音声データ
 type Voice struct {
@@ -34,8 +35,12 @@ type MirrorBallResponse struct {
 func main() {
 	fmt.Println("Run Server")
 
+	apiKey = os.Getenv("EMPATH_API_KEY")
+	fmt.Println(apiKey)
+
 	http.Handle("/mirror_ball", websocket.Handler(MirrorBallHandler))
 	http.Handle("/echo", websocket.Handler(EchoHandler))
+	http.HandleFunc("/debug", HttpHandler)
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
 		port = "3000"
@@ -71,7 +76,7 @@ func MirrorBallHandler(ws *websocket.Conn) {
 		// EmpathAPIにWAVを送信し感情を受け取る
 		empath := SendEmpathAPI(wavData)
 
-		// API結果よりResponseJパラメータを生成
+		// API結果よりResponseパラメータを生成
 		res := CreateResponse(empath)
 
 		// クライアントに送信
@@ -82,7 +87,13 @@ func MirrorBallHandler(ws *websocket.Conn) {
 	}
 }
 
-// おうむ返し
+// おうむ返し(デバッグ用)
 func EchoHandler(ws *websocket.Conn) {
 	io.Copy(ws, ws)
+}
+
+// デバッグその２
+func HttpHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Debug Page <br>")
+	// fmt.Fprintf(w, "apiKey:%s", apiKey)
 }
